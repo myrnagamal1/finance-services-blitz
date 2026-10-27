@@ -1067,6 +1067,17 @@
           <textarea id="lf-notes" class="lf-input" rows="3" placeholder="Key pain points, context…"></textarea>
         </div>
 
+        <!-- Campaign Code Banner -->
+        <div id="lf-campaign-wrap" style="background:rgba(0,158,167,0.1);border:1px solid rgba(0,158,167,0.3);border-radius:12px;padding:14px 16px;margin-bottom:16px;">
+          <p style="color:rgba(255,255,255,0.5);font-size:11px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 6px;">Campaign Code</p>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span id="lf-campaign-code" style="font-size:15px;font-weight:700;color:var(--teal2);letter-spacing:.04em;flex:1;">CRM-WE26-ISM-NGA_Q4</span>
+            <button onclick="copyCampaignCode()" id="lf-campaign-copy-btn"
+              style="padding:6px 14px;border-radius:20px;border:1px solid rgba(0,158,167,0.5);background:rgba(0,158,167,0.15);color:var(--teal2);font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;">
+              Copy
+            </button>
+          </div>
+        </div>
         <!-- Submit -->
         <button class="lf-submit" id="lf-btn" onclick="lfSubmit()">Submit Lead →</button>
         <div id="lf-status" style="margin-top:16px;font-size:14px;text-align:center;min-height:20px;"></div>
@@ -1184,7 +1195,17 @@ const SDES = ["Aly Shadi","Brian De Brie","Christian Starck","Estel Castella","L
 const PHONE_REGEX = /[0-9]{7,15}|\+[0-9]{7,15}/;
 const PHONE_HINT  = 'Format: 7–15 digit number, optional + prefix';
 
+const CAMPAIGN_CODE = 'CRM-WE26-ISM-NGA_Q4';
+
 const REFRESH_INTERVAL = 60000; // 60 seconds
+
+function copyCampaignCode() {
+  navigator.clipboard.writeText(CAMPAIGN_CODE).then(function() {
+    var btn = document.getElementById('lf-campaign-copy-btn');
+    btn.textContent = 'Copied!';
+    setTimeout(function() { btn.textContent = 'Copy'; }, 2000);
+  });
+}
 
 // ── INIT ────────────────────────────────────────────────
 (function init() {
