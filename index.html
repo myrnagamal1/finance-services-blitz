@@ -1785,6 +1785,7 @@ function lfSubmit() {
     .then(r => r.json())
     .then(d => {
       if (d.status === 'ok' || d.result === 'success') {
+        playSuccessSound();
         status.innerHTML = '<span style="color:#00C8D4;font-weight:700;">✓ Lead submitted successfully!</span>';
         ['lf-rep','lf-account','lf-contact','lf-title','lf-phone','lf-email','lf-nextstep','lf-notes'].forEach(id =>
           document.getElementById(id).value = '');
