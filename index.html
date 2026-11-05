@@ -764,6 +764,8 @@
     }
   }
 
+    #global-sound-banner { padding: 10px 16px; font-size: 13px; bottom: 16px; right: 16px; }
+    #global-sound-banner span:first-child { font-size: 16px; }
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
@@ -1405,6 +1407,31 @@ function renderLeaderboard(data) {
 // Initial load + auto-refresh
 loadLeaderboard();
 setInterval(loadLeaderboard, REFRESH_INTERVAL);
+
+// ── REAL-TIME SSE — broadcast popup+sound to all open tabs ──
+(function connectSSE() {
+  if (!window.EventSource) return;
+  var es = new EventSource(WEB_APP_URL + '/stream');
+  es.onmessage = function(e) {
+    try {
+      var data = JSON.parse(e.data);
+      if (data.event === 'new-lead') {
+        loadLeaderboard();
+        playSuccessSound();
+        showLeadPopup(data.partner, data.account);
+      } else if (data.event === 'organiser-notify') {
+        playAnnouncementSound();
+        showOrgNotification(data.message);
+      }
+    } catch(_) {}
+  };
+  es.onerror = function() {
+    es.close();
+    setTimeout(connectSSE, 5000); // reconnect after 5s
+  };
+})();
+
+
 </script>
 
 <!-- ══ DASHBOARD SECTION ══════════════════════════════════════ -->
@@ -1932,5 +1959,6 @@ function filterLeadsTable() {
 }
 </script>
 
+<div id="global-sound-banner" style="position:fixed;bottom:24px;right:24px;z-index:99999;background:linear-gradient(135deg,#7B4FBF,#5B35A0);color:#fff;padding:12px 20px;border-radius:50px;box-shadow:0 4px 20px rgba(139,92,246,0.5);cursor:pointer;display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px;animation:pulse-glow 2s ease-in-out infinite;" onclick="enableSound()"><span style="font-size:20px;">🔈</span><span>Tap to Enable Sound</span></div>
 </body>
 </html>
